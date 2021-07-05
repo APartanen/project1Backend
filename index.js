@@ -6,9 +6,9 @@ const app = express();
 //yhteys
 var db = mysql.createConnection({
     host     : 'localhost',
-    user     : '',
-    password : '',
-    database : ''
+    user     : 'root',
+    password : '0442902835',
+    database : 'test'
   });
 
 //yhdistys
@@ -24,28 +24,7 @@ app.get('/',(req,res) => {
   res.send("Working")
   })
   
-//käyttäjien tiedon haku
-app.get('/get',(req,res) => {
-    let sql = 'SELECT * FROM käyttäjä'
-    db.query(sql, (err,result) => {
-        if(err) throw err;
-        console.log(result);
-        res.send(result)
 
-    })
-})
-
-
-//postausten tiedon haku
-app.get('/getposts',(req,res) => {
-    let sql = 'SELECT * FROM postaus'
-    db.query(sql, (err,result) => {
-        if(err) throw err;
-        console.log(result);
-        res.send(result)
-
-    })
-})
 
 //Valitse postaukset tietylle käyttäjälle - aika järjestys tässä vai myöhemmin esim serverin puolella vai esim selaimessa oleva javascript funktio? 
 app.get('/getPostsForUser',(req,res) => {
@@ -71,15 +50,30 @@ app.get('/getCommentsForPost',(req,res) => {
   })
 })
 
-//Valitse postaukset tietyllä tagilla - tarvitsee täydennystä
+
+//Valitse postaukset tietyllä tagilla - toimii
 app.get('/getPostsByTagID',(req,res) => {
   id = 1;
   let sql = `SELECT p.* FROM postaustagit p WHERE tagID = '${id}'`;
   db.query(sql, (err,result) => {
-      if(err) throw err;
-      console.log(result);
-      res.send(result)
+    if(err) throw err;
 
+    let list = []
+    result.forEach(element => {
+      if(!list.includes(element.postausID)) { 
+        list.push(element.postausID)
+      } else {
+        //console.log("else:",list.includes(element))
+        //console.log(list)
+      }
+    })
+
+    //etsi näiden postausID avulla postaukset 
+    let sql = `SELECT postaus.* FROM postaus WHERE postausID IN (${list})`;
+    db.query(sql, (err,result) => {
+      if(err) throw err;
+        res.send(result);
+    });  
   })
 })
 
@@ -88,24 +82,42 @@ app.get('/getTagsByTagID',(req,res) => {
   id = 1;
   let sql = `SELECT tag.* FROM tag WHERE tagID = '${id}'`;
   db.query(sql, (err,result) => {
-      if(err) throw err;
-      console.log(result);
-      res.send(result)
-
+    if(err) throw err;
+    res.send(result);
   })
 })
 
-//Hae tagit postaukselle - tarvitsee tyädennystä
+
+
+//Hae tagit postaukselle - toimii
 app.get('/getTagsForPost',(req,res) => {
   id = 1;
   let sql = `SELECT p.* FROM postaustagit p WHERE postausID = '${id}'`;
   db.query(sql, (err,result) => {
-      if(err) throw err;
-      console.log(result);
-      res.send(result)
+    if(err) throw err;
+    console.log(result);
+    
 
+    let list = []
+    result.forEach(element => {
+      if(!list.includes(element.tagID)) { 
+        list.push(element.tagID)
+      } else {
+        //console.log("else:",list.includes(element))
+        //console.log(list)
+      }
+    })
+
+    
+    let sql = `SELECT tag.* FROM tag WHERE tagID IN (${list})`;
+    db.query(sql, (err,result) => {
+      if(err) throw err;
+        res.send(result);
+    });  
   })
 })
+
+
 
 /* POST esimerkki
 app.post('/postpost',(req,res) => {
