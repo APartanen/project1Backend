@@ -1,13 +1,15 @@
 const express = require('express');
 const mysql = require('mysql');
-
+const cors = require("cors");
 const app = express();
+app.use(cors());
+app.use(express.json({limit:'1mb'}));
 
 //yhteys
 var db = mysql.createConnection({
     host     : 'localhost',
     user     : 'root',
-    password : '',
+    password : '0442902835',
     database : 'test'
   });
 
@@ -21,13 +23,15 @@ db.connect((err) => {
 
 //Alku testaus
 app.get('/',(req,res) => {
-  res.send("Working")
-  })
+  console.log(req);
+  res.send("Working");
+})
   
 
 
 //Valitse postaukset tietylle käyttäjälle - aika järjestys tässä vai myöhemmin esim serverin puolella vai esim selaimessa oleva javascript funktio? 
 app.get('/getPostsForUser',(req,res) => {
+  //let id=req.body.id;
   id = 1;
   let sql = `SELECT postaus.* FROM postaus WHERE käyttäjäID = '${id}'`;
   db.query(sql, (err,result) => {
@@ -116,6 +120,38 @@ app.get('/getTagsForPost',(req,res) => {
     });  
   })
 })
+
+//Poista postaus - testausta
+app.delete('/poistaPostaus', (req,res) => {
+  //let delID = req.body.id;
+  let sql = `DELETE FROM postaus WHERE id='${delID}'; `
+
+  console.log(sql);
+
+  db.query(sql, (err, res) => {
+    if(err) throw err; 
+    console.log(res);
+    res.send(res);
+  }); 
+
+  let sql2 = `DELETE FROM postaustagit WHERE postausID='${delID}'; `
+  db.query(sql, (err, res) => {
+    if(err) throw err; 
+    console.log(res);
+    res.send(res);
+  }); 
+
+
+});
+
+app.post('/postpost',(req,res) => {
+  console.log("req.body:",req.body.value);
+  res.send("received");
+})
+
+
+
+
 
 
 
