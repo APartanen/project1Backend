@@ -145,7 +145,29 @@ app.delete('/poistaPostaus', (req,res) => {
 });
 
 app.post('/postpost',(req,res) => {
-  console.log("req.body:",req.body.value);
+  //console.log("req.body:",req.body);
+  let käyttäjäID = req.body.käyttäjäID;
+  let otsikko = req.body.otsikko;
+  let teksti = req.body.teksti;
+  let kuva = req.body.kuva;
+
+  let sql = `INSERT INTO postaus (käyttäjäID, otsikko, teksti, kuva, julkaisuAika)
+  VALUES ('${käyttäjäID}', '${otsikko}', '${teksti}', '${kuva}', CURRENT_TIMESTAMP);`
+  //Save a post into database
+  db.query(sql, (err, res) => {
+    if(err) throw err; 
+
+    //Save tag info into database with post id and tagid - need to add permanent tagIds
+    let sql2 =  `INSERT INTO postaustagit (tagID,postausID)
+    VALUES ('1','${res.insertId}');`
+    db.query(sql2, (err, res) => {
+      if(err) throw err; 
+    }); 
+  
+  }); 
+
+
+
   res.send("received");
 })
 
