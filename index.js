@@ -10,7 +10,7 @@ var db = mysql.createConnection({
     host     : 'localhost',
     user     : 'root',
     password : '0442902835',
-    database : 'test'
+    database : 'project1'
   });
 
 //yhdistys
@@ -144,6 +144,7 @@ app.delete('/poistaPostaus', (req,res) => {
 
 });
 
+//luo postaus
 app.post('/postpost',(req,res) => {
   //console.log("req.body:",req.body);
   let käyttäjäID = req.body.käyttäjäID;
