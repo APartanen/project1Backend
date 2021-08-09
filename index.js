@@ -9,7 +9,7 @@ app.use(express.json({limit:'1mb'}));
 var db = mysql.createConnection({
     host     : 'localhost',
     user     : 'root',
-    password : '0442902835',
+    password : '',
     database : 'project1'
   });
 
