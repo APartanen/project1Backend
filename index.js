@@ -56,8 +56,8 @@ app.get('/getCommentsForPost',(req,res) => {
 
 
 //Valitse postaukset tietyllä tagilla - toimii
-app.get('/getPostsByTagID',(req,res) => {
-  id = 1;
+app.get('/getPostsByTagID/:id',(req,res) => {
+  id = req.params.id;
   let sql = `SELECT p.* FROM postaustagit p WHERE tagID = '${id}'`;
   db.query(sql, (err,result) => {
     if(err) throw err;
@@ -83,6 +83,10 @@ app.get('/getPostsByTagID',(req,res) => {
 
 //Hae tagin teksti
 app.get('/getTagsByTagID',(req,res) => {
+
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
   id = 1;
   let sql = `SELECT tag.* FROM tag WHERE tagID = '${id}'`;
   db.query(sql, (err,result) => {
