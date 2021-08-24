@@ -7,11 +7,13 @@ app.use(express.json({ limit:'1mb' }))
 
 //yhteys
 var db = mysql.createConnection({
-  host     : 'localhost',
-  user     : 'root',
-  password : '',
-  database : 'project1'
-})
+
+    host     : 'localhost',
+    user     : 'root',
+    password : '',
+    database : 'project1'
+  });
+
 
 //yhdistys
 db.connect((err) => {
